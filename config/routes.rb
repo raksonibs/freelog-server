@@ -2,7 +2,8 @@ Rails.application.routes.draw do
   use_doorkeeper
   root to: "application#index"  
   post 'auth/steam/callback' => 'api/v1/sessions#auth_callback'
-      
+  get "/test" => "base#index"
+  
   namespace :api do
     namespace :v1 do
       root to: "base#index"

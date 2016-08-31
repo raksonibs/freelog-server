@@ -11,101 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160828000134) do
+ActiveRecord::Schema.define(version: 20160831111244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "balance_change_categories", force: :cascade do |t|
-    t.integer  "balance_change_id"
-    t.integer  "category_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-  end
-
-  add_index "balance_change_categories", ["balance_change_id", "category_id"], name: "balance_change_categories_index", unique: true, using: :btree
-
-  create_table "balance_changes", force: :cascade do |t|
-    t.integer  "user_id",                 null: false
-    t.float    "value",                   null: false
-    t.integer  "change_type", default: 0, null: false
-    t.datetime "entry_date",              null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
-
-  create_table "battles", force: :cascade do |t|
-    t.integer  "winner_id"
-    t.integer  "loser_id"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.string   "name"
-    t.string   "challenged_email"
-    t.string   "challenger_email"
-    t.integer  "status",            default: 0
-    t.integer  "challenger_pet_id"
-    t.integer  "challenged_pet_id"
-    t.integer  "current_turn"
-  end
-
-  create_table "battles_pets", force: :cascade do |t|
-    t.integer  "battle_id"
-    t.integer  "pet_id"
+  create_table "attendances", force: :cascade do |t|
+    t.integer  "project_id"
+    t.text     "notes"
+    t.float    "hour_rate"
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "battles_pets", ["battle_id"], name: "index_battles_pets_on_battle_id", using: :btree
-  add_index "battles_pets", ["pet_id"], name: "index_battles_pets_on_pet_id", using: :btree
-
-  create_table "battles_users", force: :cascade do |t|
-    t.integer  "battle_id"
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "battles_users", ["battle_id"], name: "index_battles_users_on_battle_id", using: :btree
-  add_index "battles_users", ["user_id"], name: "index_battles_users_on_user_id", using: :btree
-
-  create_table "categories", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "game_stats", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.float    "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer  "game_id"
-  end
-
-  add_index "game_stats", ["game_id"], name: "index_game_stats_on_game_id", using: :btree
-  add_index "game_stats", ["user_id"], name: "index_game_stats_on_user_id", using: :btree
-
-  create_table "games", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.float    "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "games", ["user_id"], name: "index_games_on_user_id", using: :btree
-
-  create_table "items", force: :cascade do |t|
-    t.integer  "pet_id"
-    t.integer  "battle_id"
-    t.integer  "user_id"
-    t.string   "name"
-    t.float    "defenceChange"
-    t.float    "attackChange"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-  end
+  add_index "attendances", ["project_id"], name: "index_attendances_on_project_id", using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", null: false
@@ -147,43 +68,15 @@ ActiveRecord::Schema.define(version: 20160828000134) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
-  create_table "pet_states", force: :cascade do |t|
-    t.integer  "state_id"
-    t.integer  "pet_id"
-    t.float    "current_health"
-    t.float    "current_defence"
-    t.float    "current_attack"
-    t.boolean  "shield"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-  end
-
-  create_table "pets", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "level",      default: 0
-    t.integer  "vertices"
+  create_table "projects", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "colour"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name"
+    t.float    "hour_rate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  add_index "pets", ["user_id"], name: "index_pets_on_user_id", using: :btree
-
-  create_table "states", force: :cascade do |t|
-    t.integer  "battle_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.integer  "current_turn"
-  end
-
-  create_table "stats", force: :cascade do |t|
-    t.integer  "stat_type",  default: 0, null: false
-    t.float    "value",                  null: false
-    t.integer  "pet_id",                 null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
+  add_index "projects", ["user_id"], name: "index_projects_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
@@ -202,10 +95,6 @@ ActiveRecord::Schema.define(version: 20160828000134) do
     t.datetime "avatar_updated_at"
   end
 
-  add_foreign_key "balance_change_categories", "balance_changes", on_delete: :cascade
-  add_foreign_key "balance_change_categories", "categories", on_delete: :cascade
-  add_foreign_key "balance_changes", "users", on_delete: :cascade
-  add_foreign_key "game_stats", "games"
-  add_foreign_key "game_stats", "users"
-  add_foreign_key "games", "users"
+  add_foreign_key "attendances", "projects"
+  add_foreign_key "projects", "users"
 end
